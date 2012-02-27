@@ -2,7 +2,6 @@
 
 ;; Copyright (C) 2012  tabi
 ;; Author: Tabito Ohtani <koko1000ban@gmail.com>
-;; Keywords: popup, gtags
 ;; Version: 0.01
 ;; Keywords: uncrustify
 
