@@ -60,6 +60,7 @@
       ('c++-mode "CPP")
       ('d-mode "D")
       ('java-mode "JAVA")
+      ('objc-mode "OC")
       (t
        nil))))
 
