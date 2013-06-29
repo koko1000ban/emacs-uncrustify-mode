@@ -145,9 +145,13 @@
   :lighter " Uncrustify"
   (if (not (uncrustify-get-lang-from-mode))
       (message "uncrustify not support this mode : %s" major-mode)
+  (if (version<= "24" emacs-version)
+    (if uncrustify-mode
+        (add-hook 'write-file-hooks 'uncrustify-write-hook nil t)
+      (remove-hook 'uncrustify-write-hook t))
     (make-local-hook 'write-file-hooks)
     (funcall (if uncrustify-mode #'add-hook #'remove-hook)
-             'write-file-hooks 'uncrustify-write-hook)))
+             'write-file-hooks 'uncrustify-write-hook))))
 
 (provide 'uncrustify-mode)
 
