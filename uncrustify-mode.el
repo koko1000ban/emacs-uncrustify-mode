@@ -24,7 +24,7 @@
 ;; and put these lines into your .emacs file.
 
 ;; (require 'uncrusfify-mode)
-;; (add-hook 'c-mode-common-hook 
+;; (add-hook 'c-mode-common-hook
 ;;    '(lambda ()
 ;;        (uncrustify-mode 1)))
 
@@ -39,13 +39,13 @@
 
 ;;; Variables:
 
-(defcustom uncrustify-config-path 
+(defcustom uncrustify-config-path
   "~/.uncrustify.cfg"
   "uncrustify config file path"
   :group 'uncrustify
   :type 'file)
 
-(defcustom uncrustify-bin 
+(defcustom uncrustify-bin
   "uncrustify -q"
   "The command to run uncrustify."
   :group 'uncrustify)
@@ -90,18 +90,18 @@
 
         (with-current-buffer error-buf (erase-buffer))
         (with-current-buffer out-buf (erase-buffer))
-        
+
         ;; Inexplicably, save-excursion doesn't work to restore the
         ;; point. I'm using it to restore the mark and point and manually
         ;; navigating to the proper new-line.
         (let ((result
                (save-excursion
                  (let ((ret (shell-command-on-region start end cmd t t error-buf nil)))
-                   (if (and 
-                        (numberp ret) 
+                   (if (and
+                        (numberp ret)
                         (zerop ret))
                        ;; Success! Clean up.
-                       (progn 
+                       (progn
                          (message "Success! uncrustify modify buffer.")
                          (kill-buffer error-buf)
                          t)
@@ -111,7 +111,7 @@
                             (with-current-buffer error-buf
                               (message "uncrustify error: <%s> <%s>" ret (buffer-string)))
                             nil))))))
-          
+
           ;; This goto-line is outside the save-excursion becuase it'd get
           ;; removed otherwise.  I hate this bug. It makes things so ugly.
           (goto-line original-line)
