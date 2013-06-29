@@ -141,6 +141,7 @@
         (widen)
         (uncrustify-invoke-command (uncrustify-get-lang-from-mode) (point-min) (point-max)))))
 
+;;;###autoload
 (define-minor-mode uncrustify-mode
   "Automatically `uncrustify' when saving."
   :lighter " Uncrustify"
