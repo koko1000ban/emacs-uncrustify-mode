@@ -44,6 +44,7 @@
   "uncrustify config file path"
   :group 'uncrustify
   :type 'file)
+(make-variable-buffer-local 'uncrustify-config-path)
 
 (defcustom uncrustify-bin
   "uncrustify -q"
