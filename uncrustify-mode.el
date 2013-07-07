@@ -24,7 +24,7 @@
 ;; and put these lines into your .emacs file.
 
 ;; (require 'uncrusfify-mode)
-;; (add-hook 'c-mode-common-hook 
+;; (add-hook 'c-mode-common-hook
 ;;    '(lambda ()
 ;;        (uncrustify-mode 1)))
 
@@ -39,13 +39,14 @@
 
 ;;; Variables:
 
-(defcustom uncrustify-config-path 
+(defcustom uncrustify-config-path
   "~/.uncrustify.cfg"
   "uncrustify config file path"
   :group 'uncrustify
   :type 'file)
+(make-variable-buffer-local 'uncrustify-config-path)
 
-(defcustom uncrustify-bin 
+(defcustom uncrustify-bin
   "uncrustify -q"
   "The command to run uncrustify."
   :group 'uncrustify)
@@ -60,6 +61,7 @@
       ('c++-mode "CPP")
       ('d-mode "D")
       ('java-mode "JAVA")
+      ('objc-mode "OC")
       (t
        nil))))
 
@@ -90,18 +92,18 @@
 
         (with-current-buffer error-buf (erase-buffer))
         (with-current-buffer out-buf (erase-buffer))
-        
+
         ;; Inexplicably, save-excursion doesn't work to restore the
         ;; point. I'm using it to restore the mark and point and manually
         ;; navigating to the proper new-line.
         (let ((result
                (save-excursion
                  (let ((ret (shell-command-on-region start end cmd t t error-buf nil)))
-                   (if (and 
-                        (numberp ret) 
+                   (if (and
+                        (numberp ret)
                         (zerop ret))
                        ;; Success! Clean up.
-                       (progn 
+                       (progn
                          (message "Success! uncrustify modify buffer.")
                          (kill-buffer error-buf)
                          t)
@@ -111,7 +113,7 @@
                             (with-current-buffer error-buf
                               (message "uncrustify error: <%s> <%s>" ret (buffer-string)))
                             nil))))))
-          
+
           ;; This goto-line is outside the save-excursion becuase it'd get
           ;; removed otherwise.  I hate this bug. It makes things so ugly.
           (goto-line original-line)
@@ -140,14 +142,19 @@
         (widen)
         (uncrustify-invoke-command (uncrustify-get-lang-from-mode) (point-min) (point-max)))))
 
+;;;###autoload
 (define-minor-mode uncrustify-mode
   "Automatically `uncrustify' when saving."
   :lighter " Uncrustify"
   (if (not (uncrustify-get-lang-from-mode))
       (message "uncrustify not support this mode : %s" major-mode)
+  (if (version<= "24" emacs-version)
+    (if uncrustify-mode
+        (add-hook 'write-file-hooks 'uncrustify-write-hook nil t)
+      (remove-hook 'uncrustify-write-hook t))
     (make-local-hook 'write-file-hooks)
     (funcall (if uncrustify-mode #'add-hook #'remove-hook)
-             'write-file-hooks 'uncrustify-write-hook)))
+             'write-file-hooks 'uncrustify-write-hook))))
 
 (provide 'uncrustify-mode)
 
