@@ -18,7 +18,7 @@ Installation
 
 And then enable uncrustify-mode on target mode like:
 
-    ;; (require 'uncrusfify-mode)
+    ;; (require 'uncrustify-mode)
 	;; (add-hook 'c-mode-common-hook 
 	;;    '(lambda ()
 	;;        (uncrustify-mode 1)))
